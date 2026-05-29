@@ -354,17 +354,6 @@
         // document.body.appendChild(_el);
 
         animate();
-
-        // Bắt đầu phát nhạc nền ngay khi khởi chạy
-        try {
-          setupAudioSystem();
-          if (audioContext && audioContext.state === 'suspended') audioContext.resume();
-          const bg = document.getElementById('audio-bg');
-          if (bg) bg.play().catch(() => console.log('Audio autoplay blocked'));
-        } catch (e) {
-          console.log('Audio start error', e);
-        }
-
       }
 
       function hideLoading() {
@@ -1276,8 +1265,12 @@
       }
 
       function stopAllAudio() {
-        // Chỉ dừng audio-letter, không dừng audio-bg
+        const a1 = document.getElementById("audio-bg");
         const a2 = document.getElementById("audio-letter");
+        if (a1) {
+          a1.pause();
+          a1.currentTime = 0;
+        }
         if (a2) {
           a2.pause();
           a2.currentTime = 0;
@@ -1289,7 +1282,14 @@
         if (appState === newState) return;
         lastActionTime = now;
         if (newState === "TRANSITION_TO_PEN") {
-          // Không dừng hoặc phát lại audio-bg nữa
+          stopAllAudio();
+          const a1 = document.getElementById("audio-bg");
+          if (a1) {
+            if (!isAudioSetup) setupAudioSystem();
+            if (audioContext && audioContext.state === "suspended")
+              audioContext.resume();
+            a1.play().catch((e) => console.log("Audio block"));
+          }
           updateStatus("Transforming to Carrot...");
         } else if (newState === "READING_LETTER") {
           stopAllAudio();
