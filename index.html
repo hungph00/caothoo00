@@ -249,7 +249,7 @@
       };
 
       const IMG_FOX = "./target.png";
-      const IMG_PEN = "./target2.png";
+      const IMG_PEN = "./target23.png";
       const IMG_LETTER = "./mess.png";
       const IMG_PHOTO_SINGLE = "./photo.png";
 
@@ -354,6 +354,17 @@
         // document.body.appendChild(_el);
 
         animate();
+
+        // Bắt đầu phát nhạc nền ngay khi khởi chạy
+        try {
+          setupAudioSystem();
+          if (audioContext && audioContext.state === 'suspended') audioContext.resume();
+          const bg = document.getElementById('audio-bg');
+          if (bg) bg.play().catch(() => console.log('Audio autoplay blocked'));
+        } catch (e) {
+          console.log('Audio start error', e);
+        }
+
       }
 
       function hideLoading() {
@@ -1265,12 +1276,8 @@
       }
 
       function stopAllAudio() {
-        const a1 = document.getElementById("audio-bg");
+        // Chỉ dừng audio-letter, không dừng audio-bg
         const a2 = document.getElementById("audio-letter");
-        if (a1) {
-          a1.pause();
-          a1.currentTime = 0;
-        }
         if (a2) {
           a2.pause();
           a2.currentTime = 0;
@@ -1282,14 +1289,7 @@
         if (appState === newState) return;
         lastActionTime = now;
         if (newState === "TRANSITION_TO_PEN") {
-          stopAllAudio();
-          const a1 = document.getElementById("audio-bg");
-          if (a1) {
-            if (!isAudioSetup) setupAudioSystem();
-            if (audioContext && audioContext.state === "suspended")
-              audioContext.resume();
-            a1.play().catch((e) => console.log("Audio block"));
-          }
+          // Không dừng hoặc phát lại audio-bg nữa
           updateStatus("Transforming to Carrot...");
         } else if (newState === "READING_LETTER") {
           stopAllAudio();
