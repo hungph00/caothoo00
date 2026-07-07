@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
@@ -250,7 +250,7 @@
 
       const IMG_FOX = "./target.png";
       const IMG_PEN = "./target23.png";
-      const IMG_LETTER = "./mess.png";
+      const IMG_LETTER = "./nggggg.png";
       const IMG_PHOTO_SINGLE = "./photo.png";
 
       const SLIDE_IMAGES = [
@@ -262,6 +262,28 @@
         "./image/6.jpg",
         "./image/7.jpg",
         "./image/8.jpg",
+        "./image/9.jpg",
+        "./image/10.jpg",
+        "./image/11.jpg",
+        "./image/12.jpg",
+        "./image/13.jpg",
+        "./image/14.jpg",
+        "./image/15.jpg",
+        "./image/16.jpg",
+        "./image/17.jpg",
+        "./image/18.jpg",
+        "./image/19.jpg",
+        "./image/20.jpg",
+        "./image/21.jpg",
+        "./image/22.jpg",
+        "./image/23.jpg",
+        "./image/24.jpg",
+        "./image/25.jpg",
+        "./image/26.jpg",
+        "./image/27.jpg",
+        "./image/28.jpg",
+        "./image/29.jpg",
+        "./image/30.jpg",
       ];
 
       let scene, camera, renderer, composer, clock, bloomPass;
@@ -416,13 +438,13 @@
             width / 2 + x,
             centerY - barHeight / 2,
             barWidth,
-            barHeight
+            barHeight,
           );
           ctx.fillRect(
             width / 2 - x - barWidth,
             centerY - barHeight / 2,
             barWidth,
-            barHeight
+            barHeight,
           );
           x += barWidth + 2;
         }
@@ -436,7 +458,7 @@
           50,
           window.innerWidth / window.innerHeight,
           0.1,
-          1000
+          1000,
         );
         camera.position.z = 70;
         renderer = new THREE.WebGLRenderer({
@@ -455,7 +477,7 @@
           new THREE.Vector2(window.innerWidth / 4, window.innerHeight / 4),
           1.5,
           0.8,
-          0.8
+          0.8,
         );
         bloomPass.threshold = 0;
         bloomPass.strength = 0;
@@ -520,7 +542,7 @@
         }
         geometry.setAttribute(
           "position",
-          new THREE.BufferAttribute(positions, 3)
+          new THREE.BufferAttribute(positions, 3),
         );
         const tex = createCircleTexture();
         const material = new THREE.PointsMaterial({
@@ -581,7 +603,7 @@
           textureLoader.load(path, (tex) => {
             const cardGeo = new THREE.PlaneGeometry(cardWidth, cardHeight);
             const cardMat = new THREE.MeshBasicMaterial({
-              color: 0xffffff,
+              color: 0xd0d0d0,
               transparent: true,
               opacity: 0,
             });
@@ -738,31 +760,80 @@
       }
       function setupMessageMesh() {
         const textureLoader = new THREE.TextureLoader();
+
         textureLoader.load(
           IMG_LETTER,
           (tex) => {
+            tex.colorSpace = THREE.SRGBColorSpace;
+            tex.needsUpdate = true;
+
             const aspect = tex.image.width / tex.image.height;
+
             const h = 40;
             const w = h * aspect;
-            const geo = new THREE.PlaneGeometry(w, h);
-            const mat = new THREE.MeshBasicMaterial({
+
+            const geometry = new THREE.PlaneGeometry(w, h);
+
+            const material = new THREE.MeshBasicMaterial({
               map: tex,
               transparent: true,
               opacity: 1,
               side: THREE.DoubleSide,
               depthTest: false,
               depthWrite: false,
+
+              // giảm độ sáng ảnh
+              color: new THREE.Color(0.8, 0.8, 0.8),
             });
-            messageMesh = new THREE.Mesh(geo, mat);
+
+            if (messageMesh) {
+              scene.remove(messageMesh);
+              messageMesh.geometry.dispose();
+              messageMesh.material.dispose();
+            }
+
+            messageMesh = new THREE.Mesh(geometry, material);
+
             messageMesh.renderOrder = 999;
             messageMesh.position.set(0, -60, 25);
             messageMesh.scale.set(0, 0, 0);
+
             scene.add(messageMesh);
           },
           undefined,
-          (err) => console.log("Err mess")
+          (err) => {
+            console.error("Load IMG_LETTER failed:", err);
+          }
         );
       }
+
+      // function setupMessageMesh() {
+      //   const textureLoader = new THREE.TextureLoader();
+      //   textureLoader.load(
+      //     IMG_LETTER,
+      //     (tex) => {
+      //       const aspect = tex.image.width / tex.image.height;
+      //       const h = 40;
+      //       const w = h * aspect;
+      //       const geo = new THREE.PlaneGeometry(w, h);
+      //       const mat = new THREE.MeshBasicMaterial({
+      //         map: tex,
+      //         transparent: true,
+      //         opacity: 1,
+      //         side: THREE.DoubleSide,
+      //         depthTest: false,
+      //         depthWrite: false,
+      //       });
+      //       messageMesh = new THREE.Mesh(geo, mat);
+      //       messageMesh.renderOrder = 999;
+      //       messageMesh.position.set(0, -60, 25);
+      //       messageMesh.scale.set(0, 0, 0);
+      //       scene.add(messageMesh);
+      //     },
+      //     undefined,
+      //     (err) => console.log("Err mess"),
+      //   );
+      // }
       function setupSinglePhoto() {
         const textureLoader = new THREE.TextureLoader();
         textureLoader.load(
@@ -783,7 +854,7 @@
             scene.add(singlePhotoMesh);
           },
           undefined,
-          (err) => console.log("Err photo")
+          (err) => console.log("Err photo"),
         );
       }
       function loadImage(url, id) {
@@ -921,7 +992,7 @@
           if (loadingDelayTime <= 0) {
             isLoadingDelay = false;
             setGuide(
-              "Nắm tay <span class='highlight'>✊</span> để biến Cà rốt, hoặc ghép Tim 🫶"
+              "Nắm tay <span class='highlight'>✊</span> để biến Cà rốt, hoặc ghép Tim 🫶",
             );
           }
         }
@@ -957,7 +1028,7 @@
             targetOpacity = 1.0;
             targetBloom = 0.0;
             setGuide(
-              "Chụm tay <span class='highlight'>🤌</span> mở thư, hoặc Xòe tay về Cáo"
+              "Chụm tay <span class='highlight'>🤌</span> mở thư, hoặc Xòe tay về Cáo",
             );
             break;
           case "READING_LETTER":
@@ -1036,7 +1107,7 @@
               group.position.x -= totalSlideWidth;
             }
             group.userData.materials.forEach(
-              (m) => (m.opacity = animSlide.opacity)
+              (m) => (m.opacity = animSlide.opacity),
             );
             group.rotation.y = Math.sin(time + idx) * 0.05 + tiltY * 0.3;
           });
@@ -1045,7 +1116,7 @@
           animSlide.opacity += (0 - animSlide.opacity) * 3.0 * dt;
           slides.forEach((group) => {
             group.userData.materials.forEach(
-              (m) => (m.opacity = animSlide.opacity)
+              (m) => (m.opacity = animSlide.opacity),
             );
           });
         }
@@ -1154,7 +1225,7 @@
       let lastVideoTime = -1;
       async function initMediaPipe() {
         const vision = await FilesetResolver.forVisionTasks(
-          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm"
+          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm",
         );
         handLandmarker = await HandLandmarker.createFromOptions(vision, {
           baseOptions: {
@@ -1199,7 +1270,7 @@
               const indexTip = lm[8];
               const pinchDist = Math.hypot(
                 indexTip.x - thumbTip.x,
-                indexTip.y - thumbTip.y
+                indexTip.y - thumbTip.y,
               );
               const dIndex = Math.hypot(lm[8].x - wrist.x, lm[8].y - wrist.y);
               const dMid = Math.hypot(lm[12].x - wrist.x, lm[12].y - wrist.y);
@@ -1211,11 +1282,11 @@
                 const hand2 = result.landmarks[1];
                 const distThumbs = Math.hypot(
                   hand1[4].x - hand2[4].x,
-                  hand1[4].y - hand2[4].y
+                  hand1[4].y - hand2[4].y,
                 );
                 const distIndexes = Math.hypot(
                   hand1[8].x - hand2[8].x,
-                  hand1[8].y - hand2[8].y
+                  hand1[8].y - hand2[8].y,
                 );
                 if (
                   distThumbs < CONFIG.heartThreshold &&
@@ -1248,7 +1319,7 @@
                   else if (activeOpen) changeState("BACK_TO_FOX");
                 } else if (
                   ["READING_LETTER", "SLIDESHOW", "VIEW_PHOTO"].includes(
-                    appState
+                    appState,
                   )
                 ) {
                   if (activeOpen) changeState("BACK_TO_FOX");
@@ -1320,7 +1391,7 @@
           composer.setSize(window.innerWidth, window.innerHeight);
           bloomPass.resolution.set(
             window.innerWidth / 4,
-            window.innerHeight / 4
+            window.innerHeight / 4,
           );
         });
       }
